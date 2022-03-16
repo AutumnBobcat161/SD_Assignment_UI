@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from '../../main/AppNavbar';
+import validator from 'validator'
 
 class SignUp extends Component {
 
@@ -24,7 +25,8 @@ class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: this.emptyItem
+            item: this.emptyItem,
+            detailsWrong: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -62,24 +64,37 @@ async handleSubmit(event) {
     if(item.password === item.confirmPassword)
     {
         let user = this.emptyUser;
-        user.username = item.username;
-        user.email = item.email;
-        user.password = item.password;
-        await fetch('/users/create', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(user),
-        });
-        this.props.history.push('/login');
+        if(!validator.isEmail(item.email) || item.username === '' || item.password === '')
+        {
+            this.setState({ detailsWrong: true })
+        }
+        else 
+        {
+            user.username = item.username;
+            user.email = item.email;
+            user.password = item.password;
+            await fetch('/users/create', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user),
+            });
+            this.props.history.push('/login');
+        }
     }
 }
 
     render() {
-        const {item} = this.state;
+        const {item, detailsWrong} = this.state;
         const title = <h2>{"Create account"}</h2>;
+
+        let wrongInfo = <></>;    
+        if(detailsWrong)
+        {
+            wrongInfo = <h3>Invalid email, username or password!</h3>
+        }
 
         return <div>
             <AppNavbar/>
@@ -111,6 +126,7 @@ async handleSubmit(event) {
                         <Button color="secondary" tag={Link} to="/login">Cancel</Button>
                     </FormGroup>
                 </Form>
+                { wrongInfo }
             </Container>
         </div>
     }
