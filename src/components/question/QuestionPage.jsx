@@ -165,10 +165,10 @@ class QuestionPage extends Component {
             {
                 authorInfo = <h3>Author: <b>{userAuthor.username}</b> <u> <b>[ {userAuthor.score} ] </b> </u></h3>
             }
-            return <div>
+            return <div data-testid="h2-test">
                 <AppNavbar/>
                 <Container>
-                    <h2>Title: {item.question.title}</h2>
+                    <h2 data-testid="h2-test">Title: {item.question.title}</h2>
                     {authorInfo}
                     <h4>Text: {item.question.text}</h4>
                     <h5>Tags: {displayTags}</h5>
@@ -190,7 +190,7 @@ class QuestionPage extends Component {
                 </Container>
             </div>
         } else {
-            return <></>
+            return <div data-testid="h2-test"></div>
         }
     }
 }
