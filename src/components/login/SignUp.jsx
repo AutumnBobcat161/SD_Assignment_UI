@@ -3,29 +3,14 @@ import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from '../../main/AppNavbar';
 import validator from 'validator'
+import { UserService } from '../service/UserService'
 
 class SignUp extends Component {
-
-    emptyItem = {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    };
-
-    emptyUser = {
-        username: '',
-        email: '',
-        password: '',
-        banned: false,
-        idRole: 2,
-        score: 0
-    };
 
     constructor(props) {
         super(props);
         this.state = {
-            item: this.emptyItem,
+            item: UserService.createEmptyUser(),
             detailsWrong: false
         };
         this.handleChange = this.handleChange.bind(this);
@@ -38,22 +23,7 @@ class SignUp extends Component {
         const field = target.id;
 
         let item = {...this.state.item};
-        if(field === 'username')
-        {
-            item.username = value;
-        }
-        if(field === 'email')
-        {
-            item.email = value;
-        }
-        if(field === 'password')
-        {
-            item.password = value;
-        }
-        if(field === 'confirmPassword')
-        {
-            item.confirmPassword = value;
-        }
+        item[field] = value
         this.setState({item});
     }
 
@@ -63,7 +33,7 @@ async handleSubmit(event) {
 
     if(item.password === item.confirmPassword)
     {
-        let user = this.emptyUser;
+        let user = UserService.createEmptyUser()
         if(!validator.isEmail(item.email) || item.username === '' || item.password === '')
         {
             this.setState({ detailsWrong: true })

@@ -2,29 +2,14 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from '../../main/AppNavbar';
+import { UserService } from '../service/UserService'
 
 class ClientEdit extends Component {
-
-    emptyUser = {
-        username: '',
-        email: '',
-        password: '',
-        banned: false,
-        score: 0
-    };
-
-    emptyItem = {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        idRole: 2,
-    };
     
     constructor(props) {
         super(props);
         this.state = {
-            item: this.emptyItem
+            item: UserService.createEmptyUser()
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -36,26 +21,7 @@ class ClientEdit extends Component {
         const field = target.id;
 
         let item = {...this.state.item};
-        if(field === 'name')
-        {
-            item.username = value;
-        }
-        if(field === 'email')
-        {
-            item.email = value;
-        }
-        if(field === 'idRole')
-        {
-            item.idRole = value;
-        }
-        if(field === 'password')
-        {
-            item.password = value;
-        }
-        if(field === 'confirmPassword')
-        {
-            item.confirmPassword = value;
-        }
+        item[field] = value
         this.setState({item});
     }
 
@@ -64,7 +30,7 @@ async handleSubmit(event) {
     const {item} = this.state;
     if(item.confirmPassword === item.password) 
     {
-        let user = this.emptyUser;
+        let user = UserService.createEmptyUser();
         user.username = item.username;
         user.email = item.email;
         user.password = item.password;

@@ -2,17 +2,9 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from '../../main/AppNavbar';
+import { AnswerService } from '../service/AnswerService';
 
 class AnswerEdit extends Component {
-
-    emptyItem = {
-        answer: {
-        idAnswer: 0,
-        idUser: 0,
-        text: '',
-        creationDate: new Date()
-        }
-    };
 
     emptyUser = {
         idUser: ''
@@ -21,7 +13,7 @@ class AnswerEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: this.emptyItem,
+            item: AnswerService.createEmptyAnswerResponse(),
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

@@ -23,7 +23,7 @@ class Login extends Component {
     async componentDidMount() {
         const users = await (await fetch(`/users/all`)).json();
 
-        this.setState({ users: users});
+        this.setState({ users: users });
     }
 
     handleChange(event) {
@@ -57,7 +57,7 @@ async handleSubmit(event) {
     else
     {
         const response = await fetch(('/users/login'), {
-            method:  'POST',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ async handleSubmit(event) {
         const {loginRequest} = this.state;
         const title = <h2>{'Login'}</h2>;
         
-        const user = localStorage.getItem('user');
+        const user = localStorage.getItem('username');
         if(user === null) {
             return <div>
                 <AppNavbar/>

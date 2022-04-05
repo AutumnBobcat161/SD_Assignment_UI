@@ -2,25 +2,15 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Button } from 'reactstrap';
 import AppNavbar from '../../main/AppNavbar';
+import { AnswerService } from '../service/AnswerService';
+import { QuestionService } from "../service/QuestionService"
 
 class QuestionPage extends Component {
-
-    emptyAnswerLike = {
-        idUser: 0,
-        type: 0,
-        idAnswer: 0
-    }
-
-    emptyQuestionLike = {
-        idUser: 0,
-        type: 0,
-        idQuestion: 0
-    }
 
     constructor(props) {
         super(props);
         this.state = {
-            item: undefined,
+            item: QuestionService.createEmptyQuestionResponse(),
             users: [],
         };
     }
@@ -31,37 +21,12 @@ class QuestionPage extends Component {
         this.setState({item: question, users: users});
     }
 
-    alreadyLikedAnswer(answer) {
-        const userLoggedInId = localStorage.getItem('userId');
-        const user = answer.userLikeAnswers.find(like => like.type === 1 && like.idUser === parseInt(userLoggedInId) && like.idAnswer === answer.answer.idAnswer);
-        return user !== undefined;
-    }
-
-    alreadyDislikedAnswer(answer) {
-        const userLoggedInId = localStorage.getItem('userId');
-        const user = answer.userLikeAnswers.find(like => like.type === 0 && like.idUser === parseInt(userLoggedInId) && like.idAnswer === answer.answer.idAnswer);
-        return user !== undefined;
-    }
-
-    alreadyLikedQuestion(idQuestion) {
-        const{item} = this.state;
-        const userLoggedInId = localStorage.getItem('userId')
-        const user = item.userLikeQuestions.find(like => like.type === 1 && like.idUser === parseInt(userLoggedInId) && like.idQuestion === idQuestion);
-        return user !== undefined;
-    }
-
-    alreadyDislikedQuestion(idQuestion) {
-        const{item} = this.state;
-        const userLoggedInId = localStorage.getItem('userId')
-        const user = item.userLikeQuestions.find(like => like.type === 0 && like.idUser === parseInt(userLoggedInId) && like.idQuestion === idQuestion);
-        return user !== undefined;
-    }
-
     async handleAddLikeQuestion(idQuestion, type) {
-        if(!((this.alreadyLikedQuestion(idQuestion) === true && type === 1)
-         || (this.alreadyDislikedQuestion(idQuestion) === true && type === 0))) {
+        const { item } = this.state
+        if(!((QuestionService.alreadyLikedQuestion(idQuestion, item) === true && type === 1)
+         || (QuestionService.alreadyDislikedQuestion(idQuestion, item) === true && type === 0))) {
             const userId = localStorage.getItem('userId');
-            let like = this.emptyQuestionLike;
+            let like = QuestionService.createEmptyUserLikeQuestion();
             like.idUser = parseInt(userId);
             like.idQuestion = idQuestion;
             like.type = type;
@@ -78,10 +43,10 @@ class QuestionPage extends Component {
     }
 
     async handleAddLikeAnswer(answer, type) {
-        if(!((this.alreadyLikedAnswer(answer) === true && type === 1)
-         || (this.alreadyDislikedAnswer(answer) === true && type === 0))) {
+        if(!((AnswerService.alreadyLikedAnswer(answer) === true && type === 1)
+         || (AnswerService.alreadyDislikedAnswer(answer) === true && type === 0))) {
             const userId = localStorage.getItem('userId');
-            let like = this.emptyAnswerLike;
+            let like = AnswerService.createEmptyUserLikeAnswer();
             like.idUser = parseInt(userId);
             like.idAnswer = answer.answer.idAnswer;
             like.type = type;
@@ -140,11 +105,11 @@ class QuestionPage extends Component {
                 {
                     answerButtons =  <><Button onClick={() => this.handleAddLikeAnswer(answer, 1)} 
                                     style={{marginLeft: "5px", color: "green", background: "yellow"}}
-                                    disabled={this.alreadyLikedAnswer(answer)}>Like</Button>
+                                    disabled={AnswerService.alreadyLikedAnswer(answer)}>Like</Button>
 
                                     <Button onClick={() => this.handleAddLikeAnswer(answer, 0)} 
                                     style={{marginLeft: "5px", color: "red", background: "pink"}}
-                                    disabled={this.alreadyDislikedAnswer(answer)}>Dislike</Button></>
+                                    disabled={AnswerService.alreadyDislikedAnswer(answer)}>Dislike</Button></>
                 } 
                 else 
                 {
@@ -182,11 +147,11 @@ class QuestionPage extends Component {
             {
                 questionButtons = <><Button onClick={() => this.handleAddLikeQuestion(item.question.idQuestion, 1)} 
                                     style={{marginLeft: "5px", color: "green", background: "yellow"}}
-                                    disabled={this.alreadyLikedQuestion(item.question.idQuestion)}>Like</Button>
+                                    disabled={QuestionService.alreadyLikedQuestion(item.question.idQuestion, item)}>Like</Button>
 
                                     <Button onClick={() => this.handleAddLikeQuestion(item.question.idQuestion, 0)} 
                                     style={{marginLeft: "5px", color: "red", background: "pink"}}
-                                    disabled={this.alreadyDislikedQuestion(item.question.idQuestion)}>Dislike</Button></>
+                                    disabled={QuestionService.alreadyDislikedQuestion(item.question.idQuestion, item)}>Dislike</Button></>
             } 
             else 
             {

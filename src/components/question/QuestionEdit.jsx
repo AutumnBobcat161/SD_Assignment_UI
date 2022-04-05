@@ -2,33 +2,14 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from '../../main/AppNavbar';
+import { QuestionService } from '../service/QuestionService';
 
 class QuestionEdit extends Component {
-
-    emptyItem = {
-        question: {
-            idQuestion: 0,
-            idUser: 0,
-            title: '',
-            text: '',
-            creationDate: new Date()
-        },
-        tags: '',
-    };
-
-    emptyTag = {
-        name: ''
-    }
-
-    emptyQuestionRequest = {
-        question: '',
-        tags: []
-    }
 
     constructor(props) {
         super(props);
         this.state = {
-            item: this.emptyItem,
+            item: QuestionService.createEmptyQuestionRequest(),
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -67,7 +48,7 @@ class QuestionEdit extends Component {
 async handleSubmit(event) {
     event.preventDefault();
     const {item} = this.state;
-    let questionRequest = this.emptyQuestionRequest;
+    let questionRequest = QuestionService.createEmptyQuestionRequest();
     questionRequest.question = item.question;
     questionRequest.question.creationDate = new Date();
     const idRole = localStorage.getItem('idRole')

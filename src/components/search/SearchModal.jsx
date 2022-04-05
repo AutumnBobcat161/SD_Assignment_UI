@@ -2,28 +2,14 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, ButtonGroup, Container, Form, FormGroup, Input, Label, Table } from 'reactstrap';
 import AppNavbar from '../../main/AppNavbar';
+import { SearchService } from "../service/SearchService"
 
 class SearchModal extends Component {
-
-emptyTag = {
-  idTag: 0,
-  name: ''
-}
-
-emptySearchRequest = {
-    title: '',
-    tags: []
-};
-
-emptyItem = {
-  title: '',
-  tags: ''
-}
 
 constructor(props) {
     super(props);
     this.state = {
-        item: this.emptyItem,
+        item: SearchService.createEmptySearchRequestImp(),
         questions: []
     };
     this.handleChange = this.handleChange.bind(this);
@@ -56,7 +42,7 @@ handleChange(event) {
 async handleSubmit(event) {
   event.preventDefault();
   const {item, tags} = this.state;
-  let searchRequest = this.emptySearchRequest
+  let searchRequest = SearchService.createEmptySearchRequest()
   searchRequest.title = item.title
   searchRequest.tags = item.tags.split(',').map(tag => {
     return tags.find(newTag => newTag.name === tag);
