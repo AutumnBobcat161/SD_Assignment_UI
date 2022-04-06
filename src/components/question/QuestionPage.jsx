@@ -39,7 +39,8 @@ class QuestionPage extends Component {
                 body: JSON.stringify(like),
             });
         }
-        window.location.reload(false);
+        const question = await (await fetch(`/question/${this.props.match.params.id}`)).json();
+        this.setState({ item:question })
     }
 
     async handleAddLikeAnswer(answer, type) {
@@ -59,7 +60,8 @@ class QuestionPage extends Component {
                 body: JSON.stringify(like),
             });
         }
-        window.location.reload(false);
+        const question = await (await fetch(`/question/${this.props.match.params.id}`)).json();
+        this.setState({ item:question })
     }
 
     async removeAnswer(idAnswer) {
@@ -70,7 +72,8 @@ class QuestionPage extends Component {
                 'Content-Type': 'application/json'
             },
         });
-        window.location.reload(false);
+        const question = await (await fetch(`/question/${this.props.match.params.id}`)).json();
+        this.setState({ item:question })
     }
 
     async removeQuestion(idQuestion) {
